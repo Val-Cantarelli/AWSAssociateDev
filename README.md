@@ -49,4 +49,43 @@ Apicar a MFA ao root, mas evitaremos de usá-lo pois há poucas ações que vc p
 Authentication: login
 Authorizations: qual recurso e/ou serviço você pode usar.
 
+<h1>AWS Identity and Access Management</h1>
+
+Como os usuários irão acessar a nossa aplicação directory? 
+Podemos requerer que a pessoa tenho um login em senha: isso é acess management on the app level; E então tem o fAato de que nós conhecemos o código que está rodando na VM hosted by EC2 e esse código vai precisar fazer chamadas de API para o serviço de armazenamento de objetos Amazon S3 para ler e gravar os dados para os funcionários, por exemplo as fotos deles. Só pq EC2 e S3 são serviços de uma conta em questão não significa que as chamadas de API entre eles se conectam automaticamente. Esses acessos precisam ser authenticados e autorizados.
+
+<h2>IAM - Identity and Access Management:</h2> 
+
+Nos dá acesso ao AWS account level(login na AWS) e também permite a conexão para chamadas de API entra EC2 e S3. Isso faz todo sentido porque eu quero que os gerentes da aplicação de Acaí apenas façam chamadas de API e não mexam no código fonte e vice-verso: se eu chamo um consultor para analisar o software não qero que ele tenha acesso ao dados dos meus clientes/funcionários.
+
+Nesse IAM: 
+ - eu crio logins para que as pessoas possam acessar os recursos dessa conta Amazon AWS(autenticação);
+ - e crio as permissões de ação que cada login terá dentro da plataforma(autorização): "Este usuário tem autorização para criar um instância de EC2?"
+
+Essa "ação" se refere à chamadas API. Dentro da AWS tudo é chamada API.
+
+<h2>IAM Policies</h2>
+
+![image](https://github.com/Val-Cantarelli/amazonAWSCertification/assets/78885340/80825d03-a343-4509-81aa-2b4d7303fc6d)
+
+
+São documentos baseados em JSON que contém as permissões relacionadas a algum recurso.
+"*": permite todas as ações(chamadas API) relacionadas ao EC2;
+
+Action: Define quais operações específicas podem ser realizadas. Por exemplo, s3:GetObject permite obter um objeto do Amazon S3.
+
+Resource: Define os recursos sobre os quais a ação pode ser executada. Por exemplo, um bucket específico do Amazon S3 (arn:aws:s3:::nome-do-bucket/*).
+
+Boas práticas: 
+
+- organize usuários em em grupos e passe permissões. Todos os usuários de um grupo herdarão as permissões;
+- crie a conta e configure o root com MFA e em seguida crie um user com permissões de administrador(não use o root no dia a dia)e faça o login com ele para começar a criar usuários, políticas IAM, etc.;
+
+
+
+
+
+
+
+
 
