@@ -81,6 +81,14 @@ Boas práticas:
 - organize usuários em em grupos e passe permissões. Todos os usuários de um grupo herdarão as permissões;
 - crie a conta e configure o root com MFA e em seguida crie um user com permissões de administrador(não use o root no dia a dia)e faça o login com ele para começar a criar usuários, políticas IAM, etc.;
 
+<h1>IAM Roles</h1>
+
+Quando algo/alguém precisa de acesso temporarário a AWS, é bem comum para permitir chamadas de API entre os serviços da conta da AWS e também entre pq qualquer chamada http para a conta AWS vai precisar de uma "assinatura". 
+
+Para criar um Role, é só acessar  o IAM,buscar o app(S3, EC2,etc) que deseja fornecer acesso e o tipo de permissão(read only, reandandwrite,etc). Esse acesso será temporário, programático e rotacional.
+
+Outra entidade que pode assumir uma role de IAM são os <i>External identity provider.</i>
+
 
 
 
