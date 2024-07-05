@@ -96,4 +96,3 @@ Outra entidade que pode assumir uma role de IAM são os <i>External identity pro
 
 
 
-
