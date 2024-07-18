@@ -93,6 +93,18 @@ Outra entidade que pode assumir uma role de IAM são os <i>External identity pro
 
 Domain 1: Cloud concepts
 
+TCO - Total cost of Ownership: 
+- Opex(Operational expenses): day-to-day costs to your organization(ex: printer toner,website hoosting, utilities)
+- Capex(Capital Expenses): long term investments(ex: purchasing a building, servers,, your printer - "generally" are purchased onde)
+- Labor cost associated with on-premises operations: people
+- Inmpact of software licensing costs: the software that i have in my company does not works in a cloud; or need pay more to works.
+
+  Others:
+  ![image](https://github.com/user-attachments/assets/1df03b3f-4830-4124-8322-cdbc32e1f346)
+
+
+  
+
 
 
 
