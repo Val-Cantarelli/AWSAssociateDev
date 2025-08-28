@@ -1,211 +1,223 @@
-# Study Plan – DVA-C02 (4 weeks) — **Teoria + Simulados (sem labs)**
 
-> **Distribuição oficial:** Development 32%, Security 26%, Deployment 24%, Troubleshooting 18%.  
-> **Método:** leitura dirigida → tabelas de trade-offs → flashcards → blocos cronometrados → error-log com revisão espaçada.
+# Study Plan – DVA-C02 (4 weeks) — **Theory + Practice Exams**
+
+> **Official distribution:** Development 32%, Security 26%, Deployment 24%, Troubleshooting 18%.
+> **Method:** guided reading → trade-off tables → flashcards → timed blocks → error-log with spaced review.
+
+---
+
+
+## Every week
+
+- [ ] **Timed blocks:** 30–35 questions/block (≈45–55 min).
+- [ ] **Weekly goal:** ≥4 blocks (120–140 questions).
+- [ ] **Error-log** after each block (template below) and **D+1 review**.
+- [ ] **Flashcards** (20–40/week) with limits, field names, and “where to configure X”.
+- [ ] **Trade-off tables** by topic (copy/complete as below).
 
 ---
 
-## Regras do jogo (todas as semanas)
-
-- [ ] **Blocos cronometrados:** 30–35 questões/bloco (≈45–55 min).
-- [ ] **Meta semanal:** ≥4 blocos (120–140 questões).
-- [ ] **Error-log** após cada bloco (modelo abaixo) e **revisão D+1**.
-- [ ] **Flashcards** (20–40/semana) com limites, nomes de campos e “onde configura X”.
-- [ ] **Tabelas de trade-offs** por tema (copie/complete as abaixo).
-
----
 
 ## Week 1 — Development with AWS Services (32%)
 
-### Teoria (checklist)
+### Theory (checklist)
 
-- [ ] Idempotência (chave natural/sintética; ideia do `ConditionExpression`).
-- [ ] Event-driven vs monolítico.
-- [ ] Coreografia (EventBridge) vs orquestração (Step Functions).
-- [ ] Retries com backoff + jitter; **onde ficam retries/DLQs** por serviço.
-- [ ] **SQS Standard vs FIFO** (ordenação/duplicatas/throughput; **High-Throughput FIFO**).
-- [ ] API Gateway **HTTP vs REST** (cache/stage vars só no REST; timeout do HTTP ≈ **30s**).
-- [ ] S3: versioning, lifecycle tiers, **SSE-KMS** (headers indicativos).
-- [ ] Lambda: **timeout máx 900s**, concurrency, **partial batch response** com SQS.
+- [ ] Idempotency (natural/synthetic key; idea of `ConditionExpression`).
+- [ ] Event-driven vs monolithic.
+- [ ] Choreography (EventBridge) vs orchestration (Step Functions).
+- [ ] Retries with backoff + jitter; **where are retries/DLQs configured** per service.
+- [ ] **SQS Standard vs FIFO** (ordering/duplicates/throughput; **High-Throughput FIFO**).
+- [ ] API Gateway **HTTP vs REST** (cache/stage vars only in REST; HTTP timeout ≈ **30s**).
+- [ ] S3: versioning, lifecycle tiers, **SSE-KMS** (header indicators).
+- [ ] Lambda: **max timeout 900s**, concurrency, **partial batch response** with SQS.
 
-### Simulados (foco semana 1)
+### Practice Exams (focus week 1)
 
-- [ ] 4 blocos (≥120 questões) priorizando **SQS/Lambda**, **DynamoDB**, **API Gateway**, **S3**.
-- [ ] Revisão das erradas usando as tabelas abaixo.
+- [ ] 4 blocks (≥120 questions) prioritizing **SQS/Lambda**, **DynamoDB**, **API Gateway**, **S3**.
+- [ ] Review mistakes using the tables below.
 
-### Tabelas-chave
+### Key Tables
 
 **SQS — Standard vs FIFO**
 
-| Tema         | Standard                | FIFO (inclui High-Throughput FIFO)            |
-|--------------|-------------------------|-----------------------------------------------|
-| Ordenação    | Best-effort             | **Garantida por `MessageGroupId`**            |
-| Duplicatas   | Possíveis               | Dedup (por conteúdo ou dedup ID explícito)    |
-| Throughput   | Altíssimo               | Menor (melhora com High-Throughput FIFO)      |
-| Uso típico   | Eventos massivos, tolera reordem | Fluxos com ordem rígida por grupo |
+| Topic        | Standard                | FIFO (includes High-Throughput FIFO)          |
+|-------------|-------------------------|-----------------------------------------------|
+| Ordering    | Best-effort             | **Guaranteed by `MessageGroupId`**            |
+| Duplicates  | Possible                | Dedup (by content or explicit dedup ID)       |
+| Throughput  | Very high               | Lower (improves with High-Throughput FIFO)    |
+| Typical use | Massive events, tolerates reordering | Flows with strict order per group |
 
 **API Gateway — HTTP vs REST**
 
-| Recurso         | HTTP API     | REST API              |
+| Feature         | HTTP API     | REST API              |
 |-----------------|--------------|-----------------------|
-| Timeout         | **≈30s**     | >29s (quota/região)   |
-| Cache           | ❌           | ✅ (por stage/method) |
+| Timeout         | **≈30s**     | >29s (quota/region)   |
+| Cache           | ❌           | ✅ (per stage/method) |
 | Stage Variables | ❌           | ✅                    |
-| Latência/$$     | Menor/Simpler| Mais recursos         |
+| Latency/$$      | Lower/Simpler| More features         |
 
-**Retries & DLQ — onde configuro?**
+**Retries & DLQ — where to configure?**
 
-| Fluxo/Serviço            | Retry fica…                 | DLQ fica…                      | Observação                                         |
-|--------------------------|-----------------------------|--------------------------------|----------------------------------------------------|
-| **Lambda ← SQS**         | ESM (Lambda) + SQS          | **Redrive Policy da SQS**      | `VisibilityTimeout ≥ timeout da Lambda`            |
-| **EventBridge → alvo**   | **RetryPolicy no target**   | **DeadLetterConfig do target** | Archive + Replay no EventBridge                    |
-| **Step Functions**       | `Retry`/`Catch` no estado   | Envio p/ SQS ou Destinations   | Atenção a payloads e timeouts por task             |
+| Flow/Service            | Retry is set…                | DLQ is set…                    | Note                                               |
+|------------------------|------------------------------|--------------------------------|----------------------------------------------------|
+| **Lambda ← SQS**       | ESM (Lambda) + SQS           | **SQS Redrive Policy**         | `VisibilityTimeout ≥ Lambda timeout`               |
+| **EventBridge → target** | **RetryPolicy on target**   | **DeadLetterConfig on target** | Archive + Replay in EventBridge                    |
+| **Step Functions**     | `Retry`/`Catch` in state     | Send to SQS or Destinations    | Pay attention to payloads and timeouts per task    |
 
 **DynamoDB — Query vs Scan**
 
-| Operação | Chave necessária | Custo/Perf | Uso típico |
+| Operation | Key required | Cost/Perf | Typical use |
 |---|---|---|---|
-| **Query** | Partition key (e opcional sort key/prefix) | **Melhor** | Acesso dirigido por chave/índice |
-| **Scan** | Não | Pior (lê tabela toda) | Auditoria/rare edge, evitar em hot path |
+| **Query** | Partition key (and optional sort key/prefix) | **Better** | Key/index-driven access |
+| **Scan** | No | Worse (reads whole table) | Auditing/rare edge, avoid in hot path |
 
 ---
+
 
 ## Week 2 — Security (26%)
 
-### Teoria
+### Theory
 
-- [ ] Menor privilégio; **IAM**: identity- vs resource-based policies.
+- [ ] Least privilege; **IAM**: identity- vs resource-based policies.
 - [ ] RBAC (roles), **assume role/STS**, **conditions** (`aws:PrincipalOrgID`, prefix/key conditions).
-- [ ] KMS: **SSE-S3 vs SSE-KMS vs client-side**, CMK vs gerenciada, **grants** (cross-account).
-- [ ] AutN/Z em APIs: **JWT**, Cognito (**User Pool** vs **Identity Pool**), Authorizers.
+- [ ] KMS: **SSE-S3 vs SSE-KMS vs client-side**, CMK vs managed, **grants** (cross-account).
+- [ ] AuthN/Z in APIs: **JWT**, Cognito (**User Pool** vs **Identity Pool**), Authorizers.
 
-### Simulados
+### Practice Exams
 
-- [ ] 4 blocos focados em IAM/KMS/Cognito/Policies.
-- [ ] Flashcards de **policy evaluation**, **KMS policy vs grants**, **Cognito flows**.
+- [ ] 4 blocks focused on IAM/KMS/Cognito/Policies.
+- [ ] Flashcards on **policy evaluation**, **KMS policy vs grants**, **Cognito flows**.
 
-**Mini-cola**
+**Cheat Sheet**
 
-| Tema                   | Ponto de prova |
-|------------------------|----------------|
-| Resource vs Identity   | Quem “carrega” permissão e quem precisa de **trust policy** |
-| KMS                    | Política da chave é soberana; **grants** em integrações     |
-| Cognito                | **User Pool** = JWT/identidade; **Identity Pool** = credenciais AWS temporárias |
+| Topic                 | Key point |
+|-----------------------|-----------|
+| Resource vs Identity  | Who “carries” permission and who needs a **trust policy** |
+| KMS                   | Key policy is sovereign; **grants** in integrations        |
+| Cognito               | **User Pool** = JWT/identity; **Identity Pool** = temporary AWS credentials |
 
 ---
+
 
 ## Week 3 — Deployment (24%)
 
-### Teoria
+### Theory
 
-- [ ] Estratégias: **blue/green**, canary, rolling; rollback por alarme.
+- [ ] Strategies: **blue/green**, canary, rolling; rollback by alarm.
 - [ ] Lambda **versions/aliases**; **weighted alias** (canary).
-- [ ] IaC: **CDK vs SAM** (DX, empacotamento, diffs, pipelines).
+- [ ] IaC: **CDK vs SAM** (DX, packaging, diffs, pipelines).
 
-### Simulados
+### Practice Exams
 
-- [ ] 4 blocos focando CodePipeline/CodeBuild/CodeDeploy, AppConfig, CDK vs SAM.
+- [ ] 4 blocks focusing on CodePipeline/CodeBuild/CodeDeploy, AppConfig, CDK vs SAM.
 
-**Mini-cola**
+**Cheat Sheet**
 
-| Tema                  | Ponto de prova                                   |
+| Topic                | Key point                                         |
 |----------------------|---------------------------------------------------|
-| CodeDeploy (Lambda)  | Hooks PreTraffic/PostTraffic; rollback por alarme |
-| AppConfig            | Feature flags e rollout sem redeploy              |
-| CDK vs SAM           | SAM brilha em serverless puro; CDK em composição multi-serviço |
+| CodeDeploy (Lambda)  | PreTraffic/PostTraffic hooks; rollback by alarm   |
+| AppConfig            | Feature flags and rollout without redeploy        |
+| CDK vs SAM           | SAM shines in pure serverless; CDK in multi-service composition |
 
 ---
+
 
 ## Week 4 — Troubleshooting & Optimization (18%)
 
-### Teoria
+### Theory
 
-- [ ] Logging × monitoring × **observability** (métricas, logs, traces).
-- [ ] **CloudWatch Logs Insights** (queries comuns), **X-Ray** (service map, subsegments).
-- [ ] Erros HTTP frequentes: **429/502/504**, timeouts, cold start.
-- [ ] Custo vs latência: tuning de memória da Lambda, **reserved concurrency**, conexões (RDS Proxy).
+- [ ] Logging × monitoring × **observability** (metrics, logs, traces).
+- [ ] **CloudWatch Logs Insights** (common queries), **X-Ray** (service map, subsegments).
+- [ ] Common HTTP errors: **429/502/504**, timeouts, cold start.
+- [ ] Cost vs latency: Lambda memory tuning, **reserved concurrency**, connections (RDS Proxy).
 
-### Simulados
+### Practice Exams
 
-- [ ] 4 blocos mirando diagnóstico: achar “onde quebrou” e **qual serviço configura o quê**.
+- [ ] 4 blocks targeting diagnostics: find “where it broke” and **which service configures what**.
 
-**Mini-cola (sintoma → check rápido)**
+**Cheat Sheet (symptom → quick check)**
 
-| Sintoma | Check |
+| Symptom | Check |
 |---|---|
-| 502/504 via API GW | Timeout/erro na Lambda; integração/binary mapping |
-| 429 | Throttling (API GW ou Lambda); ajustar limites/RC |
-| Latência variável | Memória/CPU da Lambda, rede, VPC (ambiente), cold starts |
+| 502/504 via API GW | Timeout/error in Lambda; integration/binary mapping |
+| 429 | Throttling (API GW or Lambda); adjust limits/RC |
+| Variable latency | Lambda memory/CPU, network, VPC (environment), cold starts |
 
 ---
 
-## Flashcards essenciais (comece já)
 
-- [ ] “**Onde fica o DLQ** no EventBridge target?” → No **alvo** (`DeadLetterConfig`).  
-- [ ] “**Qual cabeçalho prova SSE-KMS** no S3 GET?” → `x-amz-server-side-encryption: aws:kms`.  
-- [ ] “**Quando `MessageGroupId` é obrigatório?**” → Em **FIFO**.  
-- [ ] “**HTTP vs REST API**: quem tem cache e stage vars?” → **REST**.  
-- [ ] “**Lambda timeout máx?**” → **900s**.  
-- [ ] “**Partial batch response** é de quem?” → **Lambda+SQS** (`batchItemFailures` no ESM).
+## Essential Flashcards (start now)
+
+- [ ] “**Where is the DLQ** in the EventBridge target?” → On the **target** (`DeadLetterConfig`).
+- [ ] “**Which header proves SSE-KMS** on S3 GET?” → `x-amz-server-side-encryption: aws:kms`.
+- [ ] “**When is `MessageGroupId` required?**” → In **FIFO**.
+- [ ] “**HTTP vs REST API**: which has cache and stage vars?” → **REST**.
+- [ ] “**Lambda max timeout?**” → **900s**.
+- [ ] “**Partial batch response** belongs to?” → **Lambda+SQS** (`batchItemFailures` in ESM).
 
 ---
+
 
 ## Error-log template
 
 ```text
-Q (resumo):
-Minha resposta:
-Certa:
-Causa-raiz do erro: (conceito/limite/nome de campo)
-Regra correta / Dica mnemônica:
-Anki card criado? [ ] SIM [ ] NÃO
+Q (summary):
+My answer:
+Correct:
+Root cause of error: (concept/limit/field name)
+Correct rule / Mnemonic tip:
+Anki card created? [ ] YES [ ] NO
 ```
 
 ---
 
-## Metas semanais (marque)
 
-- **Semana 1**
-  - [ ] Teoria (Development)
-  - [ ] 4 blocos simulados
+## Weekly goals (check off)
+
+- **Week 1**
+  - [ ] Theory (Development)
+  - [ ] 4 practice blocks
   - [ ] 20–40 flashcards
-  - [ ] Revisão D+1
-- **Semana 2**
-  - [ ] Teoria (Security)
-  - [ ] 4 blocos simulados
+  - [ ] D+1 review
+- **Week 2**
+  - [ ] Theory (Security)
+  - [ ] 4 practice blocks
   - [ ] 20–40 flashcards
-  - [ ] Revisão D+1
-- **Semana 3**
-  - [ ] Teoria (Deployment)
-  - [ ] 4 blocos simulados
+  - [ ] D+1 review
+- **Week 3**
+  - [ ] Theory (Deployment)
+  - [ ] 4 practice blocks
   - [ ] 20–40 flashcards
-  - [ ] Revisão D+1
-- **Semana 4**
-  - [ ] Teoria (Troubleshooting)
-  - [ ] 4 blocos simulados
+  - [ ] D+1 review
+- **Week 4**
+  - [ ] Theory (Troubleshooting)
+  - [ ] 4 practice blocks
   - [ ] 20–40 flashcards
-  - [ ] Revisão D+1
-  - [ ] Revisão geral (tabelas & anotações)
+  - [ ] D+1 review
+  - [ ] General review (tables & notes)
 
 ---
 
-## Quick notes (para fixar)
 
-- [ ] **HTTP API timeout ≈30s**; **REST** pode ir **>29s** (quota/região).  
-- [ ] **SQS FIFO**: ordenação garantida via `MessageGroupId`; dedup por conteúdo/ID; throughput menor (use **High-Throughput FIFO** se precisar).  
-- [ ] **Lambda**: máx **900s**; alinhar **VisibilityTimeout ≥ timeout** (SQS→Lambda).
+## Quick notes (to remember)
 
----
-
-## Definition of Done (pré-prova)
-
-- [ ] Média **≥80%** nos blocos da última semana.  
-- [ ] Zero dúvidas nas tabelas de trade-offs (conhece de cabeça).  
-- [ ] Flashcards revistos na véspera (spaced repetition).  
-- [ ] Error-log lido e “regra-de-ouro” memorizada para cada erro repetido.
+- [ ] **HTTP API timeout ≈30s**; **REST** can go **>29s** (quota/region).
+- [ ] **SQS FIFO**: ordering guaranteed via `MessageGroupId`; dedup by content/ID; lower throughput (use **High-Throughput FIFO** if needed).
+- [ ] **Lambda**: max **900s**; align **VisibilityTimeout ≥ timeout** (SQS→Lambda).
 
 ---
 
-## Próximo passo
 
-- Leitura da **Semana 1 (Development)** → **1 bloco cronometrado** hoje → preencher o **error-log** → criar **10–15 flashcards** das erradas.
+## Definition of Done (pre-exam)
+
+- [ ] **≥80% average** in the last week’s blocks.
+- [ ] Zero doubts in the trade-off tables (know them by heart).
+- [ ] Flashcards reviewed on the eve (spaced repetition).
+- [ ] Error-log read and “golden rule” memorized for each repeated error.
+
+---
+
+
+## Next step
+
+- Read **Week 1 (Development)** → **1 timed block** today → fill in the **error-log** → create **10–15 flashcards** from mistakes.
