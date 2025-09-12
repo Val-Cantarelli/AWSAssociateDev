@@ -1,40 +1,45 @@
+
 # amazonAWSCertification
-Introdução:
-Iremos usar uma web aplication que registra novo empregados. Iremos usar todos os serviços abaixo: 
- - VPC para o buid;
- - EC2(essencialmente oferece máquinas virtuais) onde hospedaremos o backend;
- - RDS: usaremos o banco de dados não relacional para guardar os dados dos employee;
- - S3(Simple Storage Service): onde ficarão imagens;
- - Amazon CloudWatch: irá fazer a parte de monitoramento da aplicação;
- - Elastic Load Balancing e EC2 auto Scaling farão a aplicação ser scalable and fault tolerant;
- - IMA: segurança e identidade;
+Introduction:
+We will use a web application that registers new employees. We will use all the services below:
+ - VPC for the build;
+ - EC2 (essentially provides virtual machines) where we will host the backend;
+ - RDS: we will use the non-relational database to store employee data;
+ - S3 (Simple Storage Service): where images will be stored;
+ - Amazon CloudWatch: will handle application monitoring;
+ - Elastic Load Balancing and EC2 Auto Scaling will make the application scalable and fault tolerant;
+ - IAM: security and identity;
 
-E, para isso, usaremos o AWS Management Console.
+And for this, we will use the AWS Management Console.
 
-![image](https://github.com/Val-Cantarelli/amazonAWSCertification/assets/78885340/2fa362a3-c4c0-494c-921c-c52ab58bea96)
+![alt text](/images/image1.png)
 
-Redundancy: se eu guardo dados no meu laptop e ele queima, perco os dados. Então os guardo no cloud, mas se ocorre um desastre natural no data center onde estavam meus dados? Pra isso temos o conceito de redundância. Meus dados estão replicados em outro data center. E esse cluster de data center é camado Availability Zone: onde temos redundância de energia, networking e conectividade. e além disso, eles fazem cluster de Availability Zone.
 
-![image](https://github.com/Val-Cantarelli/amazonAWSCertification/assets/78885340/7d6178dd-9671-40d5-b1b7-27a27e22273e)
+Redundancy: If I store data on my laptop and it burns out, I lose the data. So I store it in the cloud, but what if a natural disaster happens in the data center where my data was? For this, we have the concept of redundancy. My data is replicated in another data center. This data center cluster is called an Availability Zone: where we have redundancy of power, networking, and connectivity. In addition, they cluster Availability Zones together.
 
-Como saber qual região eu devo escolheer?
+![alt text](/images//image2.png)
 
-Considerações:
-- Compliance:see existe algum regulamento que faça o seu DB e/ou resources rodarem dentro de um país /localidade específica;
-- Latency: quão perto meus resources estão dos meus users; Você pode escolher usar no Brazil, mas os usuários de Oregan irão ser afetados
-- Pricing: em SP, por exemplo, é mais caro por conta a estrutra de impostos
-- Service availability: assim que um servico é lançados você não aplica ele para todo o mundo e sim, primeiramente, na sua zona
 
-Os quatro campos acima são básicop. Precisamos pensar em Edge locations and regional Edge caches: replicar cópias de conteúdo para que cada solicitação não faça o download de novo.
+How do I know which region I should choose?
 
-Como interagir com a AWS API: 
+Considerations:
+- Compliance: check if there is any regulation that requires your DB and/or resources to run within a specific country/location;
+- Latency: how close are my resources to my users? You can choose to use Brazil, but users in Oregon will be affected
+- Pricing: in São Paulo, for example, it is more expensive due to the tax structure
+- Service availability: when a service is launched, it is not applied worldwide at once, but first in your zone
+
+The four points above are basic. We also need to think about Edge locations and regional Edge caches: replicate copies of content so that each request does not have to download it again.
+
+
+How to interact with the AWS API:
 - AWS Management Console
-- AWS Comand Line Iterface
+- AWS Command Line Interface
 - AWS Software Development Kits
-  
+
 <h1>Security and the AWS Shared Responsibility Model</h1>
 
-A aplicação é composta por partes e assim também é a responsabilidade. Algumas partes são  de responsabilidade da AWS e outras do cliente.
+
+The application is composed of parts, and so is the responsibility. Some parts are the responsibility of AWS and others of the customer.
 
 ![image](https://github.com/Val-Cantarelli/amazonAWSCertification/assets/78885340/372288ae-a30d-461e-a79e-430de6ab5672)
 
@@ -44,63 +49,68 @@ A aplicação é composta por partes e assim também é a responsabilidade. Algu
 
 ![image](https://github.com/Val-Cantarelli/amazonAWSCertification/assets/78885340/e882620c-d6f7-4d9c-b6e9-c75dec3fbdfb)
 
-Apicar a MFA ao root, mas evitaremos de usá-lo pois há poucas ações que vc precisa do root. 
+
+Apply MFA to the root user, but we will avoid using it since there are few actions that require the root account.
 
 Authentication: login
-Authorizations: qual recurso e/ou serviço você pode usar.
+Authorization: which resource and/or service you can use.
+
 
 <h1>AWS Identity and Access Management</h1>
 
-Como os usuários irão acessar a nossa aplicação directory? 
-Podemos requerer que a pessoa tenho um login em senha: isso é acess management on the app level; E então tem o fAato de que nós conhecemos o código que está rodando na VM hosted by EC2 e esse código vai precisar fazer chamadas de API para o serviço de armazenamento de objetos Amazon S3 para ler e gravar os dados para os funcionários, por exemplo as fotos deles. Só pq EC2 e S3 são serviços de uma conta em questão não significa que as chamadas de API entre eles se conectam automaticamente. Esses acessos precisam ser authenticados e autorizados.
+How will users access our application directly?
+We can require the person to have a login and password: this is access management on the app level. And then there is the fact that we know the code running on the VM hosted by EC2, and this code will need to make API calls to the Amazon S3 object storage service to read and write employee data, such as their photos. Just because EC2 and S3 are services in the same account does not mean that API calls between them connect automatically. These accesses need to be authenticated and authorized.
 
-<h2>IAM - Identity and Access Management:</h2> 
 
-Nos dá acesso ao AWS account level(login na AWS) e também permite a conexão para chamadas de API entra EC2 e S3. Isso faz todo sentido porque eu quero que os gerentes da aplicação de Acaí apenas façam chamadas de API e não mexam no código fonte e vice-verso: se eu chamo um consultor para analisar o software não qero que ele tenha acesso ao dados dos meus clientes/funcionários.
+<h2>IAM - Identity and Access Management:</h2>
 
-Nesse IAM: 
- - eu crio logins para que as pessoas possam acessar os recursos dessa conta Amazon AWS(autenticação);
- - e crio as permissões de ação que cada login terá dentro da plataforma(autorização): "Este usuário tem autorização para criar um instância de EC2?"
+Gives us access at the AWS account level (login to AWS) and also allows connection for API calls between EC2 and S3. This makes sense because I want the managers of the Açaí application to only make API calls and not touch the source code, and vice versa: if I hire a consultant to analyze the software, I don't want them to have access to my clients'/employees' data.
 
-Essa "ação" se refere à chamadas API. Dentro da AWS tudo é chamada API.
+In IAM:
+ - I create logins so people can access the resources of this Amazon AWS account (authentication);
+ - and I create the action permissions that each login will have within the platform (authorization): "Does this user have authorization to create an EC2 instance?"
+
+This "action" refers to API calls. Within AWS, everything is an API call.
+
 
 <h2>IAM Policies</h2>
 
 ![image](https://github.com/Val-Cantarelli/amazonAWSCertification/assets/78885340/80825d03-a343-4509-81aa-2b4d7303fc6d)
 
+These are JSON-based documents that contain permissions related to a resource.
+"*": allows all actions (API calls) related to EC2;
 
-São documentos baseados em JSON que contém as permissões relacionadas a algum recurso.
-"*": permite todas as ações(chamadas API) relacionadas ao EC2;
+Action: Defines which specific operations can be performed. For example, s3:GetObject allows getting an object from Amazon S3.
 
-Action: Define quais operações específicas podem ser realizadas. Por exemplo, s3:GetObject permite obter um objeto do Amazon S3.
+Resource: Defines the resources on which the action can be performed. For example, a specific Amazon S3 bucket (arn:aws:s3:::bucket-name/*).
 
-Resource: Define os recursos sobre os quais a ação pode ser executada. Por exemplo, um bucket específico do Amazon S3 (arn:aws:s3:::nome-do-bucket/*).
+Best practices:
 
-Boas práticas: 
+- Organize users into groups and assign permissions. All users in a group will inherit the permissions;
+- Create the account and configure the root with MFA, then create a user with administrator permissions (do not use the root for daily tasks) and log in with it to start creating users, IAM policies, etc.;
 
-- organize usuários em em grupos e passe permissões. Todos os usuários de um grupo herdarão as permissões;
-- crie a conta e configure o root com MFA e em seguida crie um user com permissões de administrador(não use o root no dia a dia)e faça o login com ele para começar a criar usuários, políticas IAM, etc.;
 
 <h1>IAM Roles</h1>
 
-Quando algo/alguém precisa de acesso temporarário a AWS, é bem comum para permitir chamadas de API entre os serviços da conta da AWS e também entre pq qualquer chamada http para a conta AWS vai precisar de uma "assinatura". 
+When something/someone needs temporary access to AWS, it is very common to allow API calls between services in the AWS account and also because any HTTP call to the AWS account will need a "signature".
 
-Para criar um Role, é só acessar  o IAM,buscar o app(S3, EC2,etc) que deseja fornecer acesso e o tipo de permissão(read only, reandandwrite,etc). Esse acesso será temporário, programático e rotacional.
+To create a Role, just access IAM, look for the app (S3, EC2, etc.) you want to provide access to and the type of permission (read only, read and write, etc.). This access will be temporary, programmatic, and rotational.
 
-Outra entidade que pode assumir uma role de IAM são os <i>External identity provider.</i>
+Another entity that can assume an IAM role is an <i>External identity provider.</i>
 
-<h1>Changed course to Prep Examam Practitioner</h1>
+
+<h1>Changed course to Prep Exam Practitioner</h1>
 
 Domain 1: Cloud concepts
 
-TCO - Total cost of Ownership: 
-- Opex(Operational expenses): day-to-day costs to your organization(ex: printer toner,website hoosting, utilities)
-- Capex(Capital Expenses): long term investments(ex: purchasing a building, servers,, your printer - "generally" are purchased onde)
+TCO - Total Cost of Ownership:
+- Opex (Operational expenses): day-to-day costs to your organization (e.g., printer toner, website hosting, utilities)
+- Capex (Capital Expenses): long-term investments (e.g., purchasing a building, servers, your printer – generally purchased once)
 - Labor cost associated with on-premises operations: people
-- Inmpact of software licensing costs: the software that i have in my company does not works in a cloud; or need pay more to works.
+- Impact of software licensing costs: the software that I have in my company does not work in the cloud; or I need to pay more for it to work.
 
-  Others:
-  ![image](https://github.com/user-attachments/assets/1df03b3f-4830-4124-8322-cdbc32e1f346)
+Others:
+![image](https://github.com/user-attachments/assets/1df03b3f-4830-4124-8322-cdbc32e1f346)
 
 
   
