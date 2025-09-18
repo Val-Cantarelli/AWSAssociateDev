@@ -3,7 +3,8 @@
      <img src="./images/badgeAWS.png" alt="AWS Associate Developer" width="240" />
 </p>
 
-<center><h1>AWS Associate Developer</h1></center>
+<h1 align="center">AWS Associate Developer</h1>
+
 
 
 ## Overview
