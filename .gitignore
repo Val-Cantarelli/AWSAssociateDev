@@ -1,5 +1,7 @@
 # Ignore macOS system files
 .DS_Store
 
-# Ignore large PDF slides
-/AWS Certified Developer Slides v41 (1).pdf
+
+# Module02 files to ignore
+/docs/Module02/code_v2025-08-17.zip
+/docs/Module02/AWS Certified Developer Slides v41 (1).pdf
