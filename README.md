@@ -1,5 +1,11 @@
-# AWS Associate Developer 
-![alt text](/images/badgeAWS.png)
+
+<p align="center">
+     <img src="./images/badgeAWS.png" alt="AWS Associate Developer" width="240" />
+</p>
+
+<center><h1>AWS Associate Developer</h1></center>
+
+
 ## Overview
 This repository contains resources and code examples for the AWS Associate Developer certification. It includes sample projects, and best practices for developing applications on the AWS platform.
 
@@ -17,12 +23,12 @@ This repository contains resources and code examples for the AWS Associate Devel
 
 ## Acknowledgements
 - [AWS official documentation].( https://docs.aws.amazon.com/)
-- [AWS Certified Developer Associate (DVA-C01)](https://www.udemy.com/course/aws-certified-developer-associate-dva-c01/?couponCode=MT250915G1)
+- Udemy: [AWS Certified Developer Associate (DVA-C01)](https://www.udemy.com/course/aws-certified-developer-associate-dva-c01/?couponCode=MT250915G1)
 
 
 # Notes from the course
-## Module 01 - [Introduction - ignore](./docs/Module01/Module01.md)
-## Module 02 - [Material Resources - ignore)](./docs/Module02/Module02.md)
+## Module 01 - [Introduction](./docs/Module01/Module01.md)
+## Module 02 - [Material Resources](./docs/Module02/Module02.md)
 ## Module 03 - [Regions and AZs](./docs/Module03/Module03.md)
 ## Module 04 - [XXXX](./docs/Module04/Module04.md)
 ## Module 05 - [XXXX](./docs/Module05/Module05.md)
