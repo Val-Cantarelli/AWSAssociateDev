@@ -22,19 +22,13 @@
 
 ## Main concepts:
 
-- **AMI (Amazon Machine Image):** image used to initialize the instance (operating system + configs).
+- **AMI (Amazon Machine Image):** The image used to initialize the instance (operating system + configurations).
+    - *Image:* A binary file that represents everything stored on the volume of a virtual machine, including the OS and its settings. If you want to replicate an EC2 instance, just create or use its AMI—this ensures all configurations and the environment are copied to the new instance.
 
-        * **Image:** a binary file that represents everything stored on the volume of a virtual machine, including the OS and its settings. If you want to replicate an EC2 instance, just create or use its AMI—this ensures all configurations and the environment are copied to the new instance.
+- **Instance Type:** Defines CPU, memory, and network performance.
+- **Storage:** You can choose network-attached (EBS & EFS) or hardware (EC2 Instance Store).
+- **Security Group:** Virtual firewall that controls traffic; you use or create one as needed.
+- **Key Pair:** Key used to access the instance via SSH.
+- **Bootstrap Script:** Configure at first launch (EC2 user data).
 
-- **Instance Type:** defines CPU/memory resources.
-- **Security Group:** virtual firewall that controls traffic—you use or create one as needed.
-- **Key Pair:** key used to access the instance via SSH.
-        
 > **Note:** You cannot associate a new key pair after the instance is created.
-
-
-
-![EC2 Diagram](./images/ec2Diagram.png)
-
-These are the main components of an EC2 instance: VM CPU and memory, AMI (image), security groups that define inbound and outbound traffic, Storage(EBS) and key pair for SSH access.
-
