@@ -7,15 +7,18 @@
 - The data persists even after terminating the instance;
 - Created for a **specific AZ**. If you want to move to another AZ, you need to create a snapshot;
 - Generally used with EC2 for boot volumes and data volumes.
+- IOPS = Input/Output Operations Per Second: É uma métrica que mede quantas operações de leitura/escrita um volume consegue fazer por segundo.
+
 
 **Types of usage with EC2:**
 
-
-┌─── Root Volume (Boot) ───┐    ┌─── Data Volumes ───┐
-│ • Operating System       │    │ • Applications      │
-│ • Basic configurations   │    │ • Databases         │
-│ • DeleteOnTermination    │    │ • User files        │
-└─────────────────────────┘    └─────────────────────┘
+| Root Volume (Boot) | Data Volumes |
+|-------------------|--------------|
+| • Operating System | • Applications |
+| • Basic configurations | • Databases |
+| • Usually gp2/gp3 | • User data/files |
+| • DeleteOnTermination = `true` | • Usually gp2/gp3 or others |
+|  | • DeleteOnTermination = `false` |
 
 
 
