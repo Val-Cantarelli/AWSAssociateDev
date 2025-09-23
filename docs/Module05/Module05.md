@@ -19,7 +19,7 @@
 
 > **Note:** You cannot associate a new key pair after the instance is created.
 
-![EC2 Diagram](image-2.png)
+![EC2 Diagram](./images/image-2.png)
 
 ## EC2 User Data
 
