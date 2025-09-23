@@ -33,7 +33,7 @@ This repository contains resources and code examples for the AWS Associate Devel
 ## Module 03 - [Regions and AZs](./docs/Module03/Module03.md)
 ## Module 04 - [IAM & AWS CLI](./docs/Module04/Module04.md)
 ## Module 05 - [EC2](./docs/Module05/Module05.md)
-## Module 06 - [XXXX](./docs/Module06/Module06.md)
+## Module 06 - [EC2 instances storages](./docs/Module06/Module06.md)
 ## Module 07 - [XXXX](./docs/Module07/Module07.md)
 ## Module 08 - [XXXX](./docs/Module08/Module08.md)
 ## Module 09 - [XXXX](./docs/Module09/Module09.md)

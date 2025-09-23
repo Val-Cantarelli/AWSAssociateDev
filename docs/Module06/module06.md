@@ -1,30 +1,67 @@
+# EC2 instances storages
+
 ## EBS - Elastic Block Store
 
-- É um HD Virtual (volume) you can attach to your instances while they run;
-- Network drive: é um drive de rede que se conecta via rede à instância;
-- The data it will persists even after terminate the instance;
-- É criado para um **AZ específica**. Se quiser mover pra outra AZ, tem que fazer snapshot;
-- Geralmente usado com EC2 para o boot volumes e data volumes.
+- It's a virtual HD (volume) you can attach to your instances while they run;
+- Network drive: it's a network drive that connects via network to the instance;
+- The data persists even after terminating the instance;
+- Created for a **specific AZ**. If you want to move to another AZ, you need to create a snapshot;
+- Generally used with EC2 for boot volumes and data volumes.
 
-**Tipos de uso com EC2:**
-
-
-┌-── Root Volume (Boot) ───┐    ┌─── Data Volumes ───┐
-│ • Sistema Operacional    │    │ • Aplicações       │
-│ • Configurações básicas  │    │ • Bancos de dados  │
-│ • DeleteOnTermination    │    │ • Arquivos usuário │
-└─────────────────────────-┘    └───────────────────-┘
+**Types of usage with EC2:**
 
 
+┌─── Root Volume (Boot) ───┐    ┌─── Data Volumes ───┐
+│ • Operating System       │    │ • Applications      │
+│ • Basic configurations   │    │ • Databases         │
+│ • DeleteOnTermination    │    │ • User files        │
+└─────────────────────────┘    └─────────────────────┘
 
 
 
 
 
 
-EBS Multi-Attach = só quando a aplicação é cluster-aware e sabe lidar com concorrência de blocos.
 
-EFS/FSx = quando você precisa de compartilhamento de arquivos pronto e fácil entre instâncias. (Sabe lidar com concorrência e blocking)
+
+
+EBS Multi-Attach = only when the application is cluster-aware and knows how to handle block concurrency.
+
+EFS/FSx = when you need ready and easy file sharing between instances. (Knows how to handle concurrency and blocking)
+
+---
+
+Quiz:
+
+1. EBS Volumes are created for specific AZs. If you want to migrate to another, it will require a snapshot.
+
+2. An instance has the Root Volume (AMI and instance configs) and the Volume with the data we put.
+
+Root volume = disposable infrastructure (`DeleteOnTermination = true`)
+
+Data volume = persistent data (`DeleteOnTermination = false`)
+
+When we terminate an instance, the root volume is deleted. The data volume is not.
+
+3. Which of the following EBS volume types can be used as boot volumes when you create EC2 instances?
+
+SSD = can boot (gp2, gp3, io1, io2).
+
+HDD = only data (st1, sc1, standard).
+
+
+4. A company wants to reduce costs and use st1 for their root volume. What will happen?
+
+st1 cannot be a root volume, only data volume.
+
+5. "Which EBS type is best for boot volumes requiring high IOPS?"
+io1 or io2
+
+Note: st1 (cheap, but only for throughput, not boot)
+
+6. What is EBS Multi-Attach?
+
+It's only for data volumes (not root/boot). Up to 16 instances can share the same data volume as long as they are in the same AZ. Attention: unlike EFS or FSx, EBS is not a "managed shared file system". Consistency is the application's responsibility.
 
 ---
 
