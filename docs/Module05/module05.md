@@ -37,7 +37,7 @@ Using User Data at the moment of instance creation, you just pass the script and
 ### EC2 stopped
 AWS does not charge for the instance, but charges if there are attached volumes, associated Elastic IP, EBS Snapshots and Load Balancers, if any.
 
-**Note: the public IP will change.**
+**Note: when started again the public IP will change.**
 
 ## [EC2 instances types](https://aws.amazon.com/ec2/instance-types/)
 

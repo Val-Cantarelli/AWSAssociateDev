@@ -1,4 +1,4 @@
-# EC2 instances storages
+# EC2 instance storage
 
 ## EBS - Elastic Block Store
 
@@ -19,13 +19,13 @@
 
 **But, in some cases it is necessary:**
 
-- The application has not been modernized yet: legacy apps with filesystem local;
+- The application has not been modernized yet: legacy apps with a local filesystem;
 - Team has migration restrictions: compliance, budget, time
 - Fine control: specific performance or custom configurations;
 
 
 
-➝ Know the main types os storages:
+➝ Know the main EBS volume types:
 
 1. gp3 (General Purpose): default, balanced (good cost/perf).
 
@@ -50,16 +50,44 @@
 - Instance Store = Physical drive (temporary)
 
 
-## S3 / EFS / RDS / DynamoDB
+## Other storage: S3 / EFS / RDS / DynamoDB
 
-Yes, they are NOT EBS, but they appear as comparison.
+Yes, they are NOT EBS, but they appear for comparison.
 
 Typical question: “Where to persist data for multiple EC2 instances?”
 ➝ Answer: EFS or S3, not EBS (because EBS only attaches to one instance at a time, except io1/io2 Multi-Attach in specific cases). 
 
 
-### EFS
-- é um systema de arquivo **REGIONAL**
+### EFS - Elastic File System (Simple View)
+>Shared File System alternative to using EBS Multi-Attach when you need a managed file system.
+
+Purpose:
+- Managed shared file system (NFS) that multiple EC2 instances mount at the same time.
+- One copy of files; every mounted instance sees the same tree.
+
+How it works:
+1. Create EFS (regional, replicated across AZs).
+2. Mount targets in each AZ.
+3. Each EC2 mounts e.g. `/mnt/efs`.
+4. Files written on one are visible to all.
+
+Mental example:
+Without EFS (needs sync):
+EC2 A: /app/uploads/photo.png
+EC2 B: /app/uploads/photo.png
+EC2 C: /app/uploads/photo.png
+
+With EFS mounted `/mnt/efs`:
+EC2 A writes /mnt/efs/photo.png → B & C read same file → C updates → all see change.
+
+What EFS gives you:
+- POSIX (chmod/chown), NFS v4.1
+- Shared, persistent, auto-scaling capacity
+- Basic file locking (NFS level)
+
+Not for high single-host IOPS DB (use EBS).
+
+Exam trigger phrases: "multiple EC2 share" / "POSIX shared storage" / "Lambda needs large libs".
 
 ### EBS Multi-Attach x EFS/FSx
 - EBS Multi-Attach = only when the application is cluster-aware and knows how to handle block concurrency.
@@ -131,9 +159,13 @@ It's only for data volumes (not root/boot). Up to 16 instances can share the sam
 3. Increase the EBS Volume (Correct)
 Reason: An 8 TB gp2 already hits gp2’s 16,000 IOPS cap. Making it bigger won’t add IOPS. RAID 0 across multiple volumes or switching to io1/io2 will increase performance.
 
-- AMI:
+8. You have launched an EC2 instance with two EBS volumes, the Root volume type and the other EBS volume type to store the data. A month later you are planning to terminate the EC2 instance. What's the default behavior that will happen to each EBS volume?
 
-1. You can use an AMI in N.Virginia Region us-east-1 to launch an EC2 instance in any AWS Region?
+RootVolume: deleted, but the data volume will persist.
+
+
+
+9. You can use an AMI in N.Virginia Region us-east-1 to launch an EC2 instance in any AWS Region?
 
 You cannot use an AMI in N. Virginia (us-east-1) to launch an EC2 instance in another AWS Region directly. An AMI only points to the EBS snapshots that are used to recreate volumes, and those snapshots exist only in the region where they were created (stored in S3 regionally). Therefore, if you want to launch the same AMI in another region, you must copy the AMI to the destination region, which copies the snapshots as well.
 
