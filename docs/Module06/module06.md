@@ -59,7 +59,7 @@ Typical question: “Where to persist data for multiple EC2 instances?”
 
 
 ### EFS
-- é um systema de arquivo que é Multi-AZ
+- é um systema de arquivo **REGIONAL**
 
 ### EBS Multi-Attach x EFS/FSx
 - EBS Multi-Attach = only when the application is cluster-aware and knows how to handle block concurrency.
@@ -125,6 +125,11 @@ Note: st1 (cheap, but only for throughput, not boot)
 
 It's only for data volumes (not root/boot). Up to 16 instances can share the same data volume as long as they are in the same AZ. Attention: unlike EFS or FSx, EBS is not a "managed shared file system". Consistency is the application's responsibility.
 
+7.You have provisioned an 8TB gp2 EBS volume and you are running out of IOPS. What is NOT a way to increase performance? 
+1.Mount EBS volume in Raid 0 
+2. change to io1 volume 
+3. Increase the EBS Volume (Correct)
+Reason: An 8 TB gp2 already hits gp2’s 16,000 IOPS cap. Making it bigger won’t add IOPS. RAID 0 across multiple volumes or switching to io1/io2 will increase performance.
 
 - AMI:
 

@@ -29,7 +29,7 @@ This repository contains resources and code examples for the AWS Associate Devel
 
 # Notes from the course
 ## Module 01 - [Introduction](./docs/Module01/module01.md)
-## Module 02 - [Material Resources](./docs/Module02module02.md)
+## Module 02 - [Material Resources](./docs/Module02/module02.md)
 ## Module 03 - [Regions and AZs](./docs/Module03/module03.md)
 ## Module 04 - [IAM & AWS CLI](./docs/Module04/module04.md)
 ## Module 05 - [EC2](./docs/Module05/module05.md)
