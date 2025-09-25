@@ -34,7 +34,7 @@ This repository contains resources and code examples for the AWS Associate Devel
 ## Module 04 - [IAM & AWS CLI](./docs/Module04/module04.md)
 ## Module 05 - [EC2](./docs/Module05/module05.md)
 ## Module 06 - [EC2 instances storages](./docs/Module06/module06.md)
-## Module 07 - [XXXX](./docs/Module07/module07.md)
+## Module 07 - [AWS Fundaments - ELB and ASG](./docs/Module07/module07.md)
 ## Module 08 - [XXXX](./docs/Module08/module08.md)
 ## Module 09 - [XXXX](./docs/Module09/module09.md)
 ## Module 10 - [XXXX](./docs/Module10/module10.md)
