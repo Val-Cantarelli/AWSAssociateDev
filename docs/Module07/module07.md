@@ -12,9 +12,10 @@ Load balancers are servers that forward traffic to multiple servers.
   - **ALB (Layer 7 HTTP/HTTPS):** Host/path routing, headers, WebSocket/HTTP2/gRPC, integrates with WAF & Cognito/OIDC auth.
   - **NLB (Layer 4 TCP/UDP/TLS):** Ultra-high throughput/low latency, static IP/Elastic IP, preserves source IP.
   - **GWLB (Layer 3):** For network/security appliances (firewalls, IDS), uses GENEVE.
+
 - **Core pieces:** Listeners (ports/protocols) → Rules → Target Groups (instance, IP; ALB also supports Lambda).
 - **Health checks** per target group (HTTP/HTTPS/TCP); deregistration delay = connection draining.
-- **Stickiness:** ALB cookies when session affinity is required.
+- **Stickiness:** ALB/NLB use cookies to ensure that the connection between the user and the EC2 instance persists, preventing the need for re-authentication.
 - **Cross-Zone LB:** ALB enabled by default; NLB can be enabled (inter-AZ data charges may apply).
 - **TLS:** SNI for multiple certificates; store certificates in ACM.
 - **Logging/metrics:** Access logs + CloudWatch metrics.
